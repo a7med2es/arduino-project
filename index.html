@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Designing and implementing an intelligent vehicle using Arduino</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="shortcut icon" href="https://osoyoo.com/picture/V2.1_Arduino_Robot_Car/other/1.jpg" type="image/x-icon">
+
+</head>
+
+<body>
+
+
+
+
+    <header>
+        <div class="logo">
+            <img class="motion" alt="logo" src="MEDIA/PHOTO/logo.png" onclick="window.location.href='index.html'">
+        </div>
+        <nav class="home-content">
+            <ul>
+
+
+                <li><a href="control.html">Control</a></li>
+                <!-- __________________
+                 ___________________ -->
+                <li><a href="#sectionAbout">About The project</a></li>
+
+                <li><a href="#sectionNames">Student's Names</a></li>
+
+                <li><a href="#sectionComponents">Components</a></li>
+
+            </ul>
+        </nav>
+    </header>
+    <!-- nav bar header end -->
+    <div class="sidebarcontainer">
+
+        <div class="active_open">
+            <button id="mainopen" class="mainopen" onclick="toggleNav()">&#9776;</button>
+        </div>
+
+        <div class="sidebar" id="sidebar">
+            <ul class="nav_open">
+                <li><a href="control.html">Control</a></li>
+                <!-- __________________
+                 ___________________ -->
+                <li><a href="#sectionAbout">About </a></li>
+
+                <li><a href="#sectionNames">Student</a></li>
+
+                <li><a href="#sectionComponents">Components</a></li>
+            </ul>
+        </div>
+
+
+        <!-- canvas -->
+        <div class="canvas" style="position: absolute; width: 100%; height:100%; z-index:-1;">
+            <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+            <div id="particles-js"
+                style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; margin-top: -15px;"></div>
+            <style>
+                #particles-js {
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    top: 0;
+                    left: 0;
+                }
+            </style>
+            <script>
+                particlesJS("particles-js", {
+                    "particles": {
+                        "number": {
+                            "value": 25, // عدد الجزيئات
+                            "density": {
+                                "enable": true,
+                                "value_area": 700
+                            }
+                        },
+                        "shape": {
+                            "type": "circle",
+                            "stroke": {
+                                "width": 6,
+                                "color": "#00000" // لون الجزيئات
+                            },
+                            "polygon": {
+                                "nb_sides": 7
+                            },
+                            "image": {
+                                "src": "img/github.svg",
+                                "width": 100,
+                                "height": 100
+                            }
+                        },
+                        "opacity": {
+                            "value": 0.6, // شفافية الجزيئات
+                            "random": true,
+                            "anim": {
+                                "enable": true,
+                                "speed": 2,
+                                "opacity_min": 0.2,
+                                "sync": false
+                            }
+                        },
+                        "size": {
+                            "value": 5,
+                            "random": true,
+                            "anim": {
+                                "enable": true,
+                                "speed": 10,
+                                "size_min": 0.1,
+                                "sync": false
+                            }
+                        },
+                        "line_linked": {
+                            "enable": true,
+                            "distance": 200, // المسافة بين الجزيئات
+                            "color": "#ffffff", // لون الروابط
+                            "opacity": 0.8,
+                            "width": 1
+                        },
+                        "move": {
+                            "enable": true,
+                            "speed": 2, // سرعة الحركة
+                            "direction": "none",
+                            "random": true,
+                            "straight": false,
+                            "out_mode": "out",
+                            "bounce": false,
+                        }
+                    },
+                    "interactivity": {
+                        "detect_on": "canvas",
+                        "events": {
+                            "onhover": {
+                                "enable": true,
+                                "mode": "repulse" // تغيير التفاعل عند التمرير
+                            },
+                            "onclick": {
+                                "enable": true,
+                                "mode": "push"
+                            },
+                            "resize": true
+                        },
+                        "modes": {
+                            "grab": {
+                                "distance": 140,
+                                "line_linked": {
+                                    "opacity": 1
+                                }
+                            },
+                            "bubble": {
+                                "distance": 400,
+                                "size": 40,
+                                "duration": 2,
+                                "opacity": 8,
+                                "speed": 3
+                            },
+                            "repulse": {
+                                "distance": 200,
+                                "duration": 0.4
+                            },
+                            "push": {
+                                "particles_nb": 4
+                            },
+                            "remove": {
+                                "particles_nb": 2
+                            }
+                        }
+                    },
+                    "retina_detect": true
+                });
+            </script>
+        </div>
+        <!-- canvas -->
+
+
+
+        <div class="container">
+
+            <section class="sectionHome">
+
+
+                <h1>
+                    تصميم وتنفيذ <span class="highlight"> مركبة ذكية </span> <span class="highlight">Arduino</span>
+                    باستخدام
+                </h1>
+
+
+                <div class="containers">
+                    <div class="box bottom">
+                        <h2 style="color: #60b845d5;">مقدمة</h2>
+                        <p>سيارة ذكية تعتمد على نظام للتحكم عن بعد ومزودة بمستشعرات لتجنب العقبات</p>
+                        <img class="photo" src="MEDIA/PHOTO/smart car.png" alt="سيارة ذكية">
+                    </div>
+                    <div class="box bottom">
+                        <h2 style="color: #60b845d5;">المكونات المطلوبة</h2>
+                        <ul>
+                            <li>arduino uno</li>
+                            <li>UltraSonic HC-SR04 Sensor</li>
+                            <li>Robot Chassis 4WD Plastic</li>
+                            <li>L298N Motor Driver</li>
+                            <li>ESP32 WiFi Bluetooth Development Board</li>
+                            <li>OV7670 VGA Camera </li>
+                            <li>Sound Sensor 3pins </li>
+                            <li>Micro Servo SG90</li>
+                        </ul>
+                    </div>
+                    <div class="box bottom">
+                        <h2 style="color: #60b845d5; text-align: center; font-size: 20px;">فيديو توضيحي عن امكانيات
+                            التحكم </h2>
+                        <iframe width="340px" height="300px"
+                            src="https://www.youtube.com/embed/I2RNq90l2nc?start=435&mute=1" accelerometer; autoplay;
+                            clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+                        <video></video>
+                    </div>
+
+                </div>
+
+
+
+            </section>
+
+
+            <!-- section (components) -->
+            <section id="sectionComponents">
+
+
+                <div class="flexsectionComponents">
+                    <nav class="sectionComponents">
+                        <ul>
+                            <li><img class="scale" src="MEDIA/PHOTO/arduino.png" alt=""> <span class="fix">arduino
+                                    uno</span> </li>
+                            <li><img class="scale" src="MEDIA/PHOTO/UltraSonic .png" alt="UltraSonic HC-SR04 Sensor">
+                                <span>UltraSonic
+                                    HC-SR04
+                                    Sensor</span>
+                            </li>
+                            <li><img class="scale" src="MEDIA/PHOTO/Robot Chassis.png" alt="Robot Chassis 4WD Plastic">
+                                <span>Robot
+                                    Chassis
+                                    4WD Plastic</span>
+                            </li>
+                            <li><img class="scale" src="MEDIA/PHOTO/L298N .png" alt="L298N Motor Driver"> <span>L298N
+                                    Motor
+                                    Driver</span>
+                            </li>
+                            <li><img class="scale" src="MEDIA/PHOTO/ESP32 WiFi Bluetooth Development Board.png"
+                                    alt="ESP32 WiFi Bluetooth Development Board"> <span>ESP32 WiFi Bluetooth Development
+                                    Board</span></li>
+                            <li><img class="scale" src="MEDIA/PHOTO/OV7670 VGA Camera.png" alt="OV7670 VGA Camera">
+                                <span>OV7670 VGA
+                                    Camera</span>
+                            </li>
+                            <li><img class="scale" src="MEDIA/PHOTO/Sound Sensor 3pins.png" alt="Sound Sensor 3pins">
+                                <span>Sound Sensor
+                                    3pins</span>
+                            </li>
+                            <li><img class="scale" src="MEDIA/PHOTO/Micro Servo SG90.png" alt="Micro Servo SG90">
+                                <span>Micro Servo
+                                    SG90</span>
+                            </li>
+                        </ul>
+                    </nav>
+            </section>
+        </div>
+
+
+        <h1><span style="color: #60b845d5">صورة</span> <span style="color: white;">توضيحية لعملية الربط </span></h1>
+        <div class="Fritzing">
+            <img src="MEDIA/PHOTO/fritzing.png" alt="Fritzing">
+        </div>
+
+
+
+
+
+        <!-- section (About The project) -->
+        <section id="sectionAbout">
+            <div>
+                <h1>
+                    نبذة تعريفية عن السيارة الذكية باستخدام
+                    <span style="color: #60b845d5;">intelligent vehicle</span>
+                </h1>
+
+                <span>تعريف السيارة الذكية:</span>
+                <p>
+                    السيارة الذكية هي نموذج من السيارات المصممة لتحسين تجربة القيادة من خلال دمج تقنيات الذكاء
+                    الاصطناعي،
+                    الحساسات، وأنظمة التحكم. باستخدام Arduino Uno، يمكن تصميم سيارة صغيرة قادرة على التفاعل مع البيئة
+                    المحيطة
+                    بها، اتخاذ القرارات، وتنفيذ المهام بشكل مستقل أو شبه مستقل.
+                </p>
+
+                <span>المكونات الأساسية:</span>
+                <ul>
+                    <li><span style="color: #969ea8">Arduino Uno:</span> - لوحة تحكم مايكروكونترولر سهلة الاستخدام
+                        وتتميز بعدد من المداخل والمخارج لتوصيل الحساسات والمحركات.</li>
+                    <li><span style="color: #969ea8">محركات DC:</span> - تُستخدم لتحريك السيارة. يمكن التحكم في
+                        سرعتها واتجاهها عبر PWM (تعديل عرض النبضة).</li>
+                    <li><span style="color: #969ea8">حساسات:</span>
+                        <ul>
+                            <li>حساسات المسافة (HC-SR04): لتجنب العقبات.</li>
+                            <li>حساسات الضوء: لتحديد الظروف المحيطة.</li>
+                            <li>حساسات الحركة: لمتابعة الحركة أو الكشف عن وجود أشياء في محيط السيارة.</li>
+                        </ul>
+                    </li>
+                    <span style="color: #969ea8">بطارية:</span>
+                    <li> لتزويد السيارة بالطاقة.</li>
+                    <span style="color: #969ea8">إطارات وقاعدة:</span>
+                    <li> تُستخدم لتجميع المكونات بشكل يمكن السيارة من الحركة.</li>
+                </ul>
+
+                <span>كيفية العمل:</span>
+                <p>
+                    يقوم Arduino بقراءة البيانات من الحساسات ويستخدم هذه البيانات لتحديد كيفية استجابة السيارة. على سبيل
+                    المثال، إذا اكتشف الحساس عائقًا في الطريق، يمكن للسيارة أن تتوقف أو تغير الاتجاه.
+                    يمكن برمجة السيارة لتنفيذ مهام محددة مثل متابعة خط أو تجنب العقبات، مما يجعلها مثالية للتجارب
+                    التعليمية
+                    والمشاريع.
+                </p>
+
+                <span>استخدامات السيارة الذكية:</span>
+                <ul>
+                    <li>مشاريع تعليمية في مجالات الإلكترونيات والبرمجة.</li>
+                    <li>تعلم تقنيات التحكم الآلي والذكاء الاصطناعي.</li>
+                    <li>تطوير مهارات التصميم والتركيب.</li>
+                </ul>
+
+                <span>ختاماً:</span>
+                <p>
+                    تُعتبر السيارات الذكية باستخدام Arduino Uno وسيلة ممتازة لتطبيق المفاهيم الهندسية والتكنولوجية، مما
+                    يوفر
+                    تجربة تعليمية تفاعلية وممتعة.
+                </p>
+            </div>
+            <img src="MEDIA/PHOTO/Front.png" alt="Car">
+            <div class="contant">
+                <div class="download">
+                    <a download="arduino code" href="MEDIA/cod/اردوينو.txt"><span class="color1""><i class=" fa-solid
+                            fa-download"></i> download the arduino
+                            code</span></a>
+                    <a download="ESP32 code" class="color2" href="MEDIA/cod/esp32.txt"><i
+                            class="fa-solid fa-download"></i>download the ESP32 code</a>
+                </div>
+            </div>
+
+            <hr>
+            <!-- section (Student's Names) -->
+            <section id="sectionNames">
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>اسم التدريسي</th>
+                            <th>أسماء الطلاب</th>
+                            <th>عنوان مشروع التخرج </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>أ.م.د.أحمد علاء عكلة</td>
+                            <td>أحمد عصام عجمي</td>
+                            <td>Designing and implementing an intelligent vehicle using Arduino</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>كاظم هيثم حسين</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="contact">
+                    <ul>
+                        <li title="CV" class="Dr"
+                            onclick="window.location.href='https://cse.uotechnology.edu.iq/index.php/ar/s/cv/969-ahmed-alaa-oglah'">
+                            أ.م.د.أحمد علاء عكلة</li>
+                        <li><a href="mailto:60008@uotechnology.edu.iq"> <i class="fa-regular fa-envelope"></i></a></li>
+                        <li><a href=""><i class="fa-brands fa-telegram"></i></a></li>
+                        <li><a href="tel:07703995224"><i class="fa-solid fa-phone-volume"></i></a></li>
+                    </ul>
+
+                    <ul>
+                        <li title="CV" class="Dr" onclick="window.location.href='https://a7med2es.github.io/-7-/'">أحمد
+                            عصام
+                            عجمي</li>
+                        <li><a href="mailto:34asqf@gmail.com"> <i class="fa-regular fa-envelope"></i></a></li>
+                        <li><a href="https://t.me/a7_ess"><i class="fa-brands fa-telegram"></i></a></li>
+                        <li><a href="tel:07701773452"><i class="fa-solid fa-phone-volume"></i></a></li>
+
+                    </ul>
+
+                    <ul>
+                        <li title="CV" class="Dr">كاظم هيثم حسين</li>
+                        <li><a href="mailto:"> <i class="fa-regular fa-envelope"></i></a></li>
+                        <li><a href=""><i class="fa-brands fa-telegram"></i></a></li>
+                        <li><a href="tel:07726122537"><i class="fa-solid fa-phone-volume"></i></a></li>
+                    </ul>
+
+            </section>
+
+        </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <footer>
+            <a style="color:rgba(0, 0, 0, 0.323); cursor: crosshair; transition: .5s; bottom: 0; position: fixed; left: 50%; transform: translateX(-50%); /* لتحريك العنصر إلى المنتصف */"
+                href="mailto:34asqf@gmail.com">𝖆7𝖒𝖊𝖉</a>
+        </footer>
+
+        <div id="back-to-top">↑</div>
+        <script src="main.js"></script>
+</body>
+
+</html>

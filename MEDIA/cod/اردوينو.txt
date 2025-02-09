@@ -1,0 +1,193 @@
+#include <Servo.h>
+
+Servo myServo;
+
+// تعريف المنافذ
+const int IN1 = 2; 
+const int IN2 = 3; 
+const int IN3 = 4; 
+const int IN4 = 5;   
+const int echopin = 9; // Echo pin
+const int trigpin = 10; // Trigger pin
+
+
+// Speed settings
+const int MOTOR_SPEED = 180;
+const int DISTANCE_THRESHOLD = 20;
+
+int distance_L, distance_F, distance_R;
+
+bool autoMode = false; // حالة وضع القيادة الذاتية
+
+void setup() {
+  Serial.begin(115200);
+  
+  // إعداد المنافذ
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+  pinMode(IN3, OUTPUT);
+  pinMode(IN4, OUTPUT);
+  pinMode(trigpin, OUTPUT);
+  pinMode(echopin, INPUT);
+  
+  myServo.attach(11);
+  myServo.write(90); // مركز السيرفو
+}
+
+void loop() {
+  if (Serial.available()) {
+    char command = Serial.read();
+    handleCommand(command);
+  }
+
+  if (autoMode) {
+    autoDrive();
+  }
+}
+
+void handleCommand(char command) {
+  Serial.print("Command received: ");
+  Serial.println(command);
+  
+  switch (command) {
+    case 'F':
+      moveForward();
+      autoMode = false; // إيقاف وضع القيادة الذاتية عند تنفيذ الأمر
+      break;
+    case 'B':
+      moveBackward();
+      autoMode = false; // إيقاف وضع القيادة الذاتية عند تنفيذ الأمر
+      break;
+    case 'L':
+      turnLeft();
+      autoMode = false; // إيقاف وضع القيادة الذاتية عند تنفيذ الأمر
+      break;
+    case 'R':
+      turnRight();
+      autoMode = false; // إيقاف وضع القيادة الذاتية عند تنفيذ الأمر
+      break;
+    case 'S':
+      stop();
+      autoMode = false; // إيقاف وضع القيادة الذاتية عند تنفيذ الأمر
+      break;
+    case 'A':
+      activateAutoMode();
+      break;
+    // لا حاجة لدالة إلغاء وضع القيادة الذاتية
+    default:
+      Serial.println("Unknown command");
+      break;
+  }
+}
+
+void autoDrive() {
+  distance_F = getDistance();
+  Serial.print("Distance Front: ");
+  Serial.println(distance_F);
+  
+  if (distance_F > DISTANCE_THRESHOLD) {
+    moveForward();
+  } else {
+    avoidObstacle();
+  }
+}
+
+void activateAutoMode() {
+  Serial.println("Auto Mode Activated");
+  autoMode = true; // تعيين الحالة
+}
+
+long getDistance() {
+  digitalWrite(trigpin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigpin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigpin, LOW);
+  
+  long duration = pulseIn(echopin, HIGH);
+  return duration / 29 / 2; // تحويل إلى سم
+}
+
+void moveForward() {
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, HIGH);
+  Serial.println("Moving Forward");
+}
+
+void moveBackward() {
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
+  Serial.println("Moving Backward");
+}
+
+void turnLeft() {
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
+  Serial.println("Turning Left");
+}
+
+void turnRight() {
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, HIGH);
+  Serial.println("Turning Right");
+}
+
+void stop() {
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, LOW);
+  Serial.println("Stopped");
+}
+
+void avoidObstacle() {
+  Serial.println("Obstacle detected. Avoiding...");
+  stop();
+  
+  myServo.write(0); // تحريك السيرفو لليسار
+  delay(300);
+  distance_R = getDistance();
+  delay(100);
+
+  myServo.write(180); // تحريك السيرفو لليمين
+  delay(500);
+  distance_L = getDistance();
+  delay(100);
+
+  myServo.write(90); // مركز السيرفو
+  delay(300);
+
+  compareDistance();
+}
+
+void compareDistance() {
+  if (distance_L > distance_R) {
+    Serial.println("Turn right");
+    digitalWrite(IN1, LOW);
+    digitalWrite(IN2, HIGH); // Turn backward left
+    digitalWrite(IN3, HIGH);
+    digitalWrite(IN4, LOW);
+    delay(350);
+  } else if (distance_R > distance_L) {
+    Serial.println("Turn left");
+    digitalWrite(IN1, HIGH); // Turn forward right
+    digitalWrite(IN2, LOW);
+    digitalWrite(IN3, LOW);
+    digitalWrite(IN4, HIGH);
+    delay(350);
+  } else {
+    Serial.println("Go back");
+    stop();
+    delay(300);
+    moveBackward();
+    delay(500);
+  }
+}
